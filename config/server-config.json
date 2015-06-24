@@ -1,0 +1,6 @@
+{
+  "serverPort":80,
+  "serverHost":"127.0.0.2",
+  "publicPath":"/home/myusr/mydir/WebNode.js/server-public/",
+  "defaultFile":"index.html"
+}
