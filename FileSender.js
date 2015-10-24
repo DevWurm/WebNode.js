@@ -36,16 +36,16 @@
 
 //module imports
 var fs = require('fs'); //file system access
-var contentTypes = require('./content-types.js'); //get configured (MIME) content types
-var serverConfig = require('./server-config.js'); //configuration data
+var ContentTypesConfigReader = new (require('./ContentTypesConfigReader.js'))(); //get configured (MIME) content types
+var ServerConfigReader = new (require('./ServerConfigReader.js'))(); //configuration data
 
 //class definition
-module.exports.FileSender = function (path, globalResponse) {
+module.exports = function (path, globalResponse) {
 
   //handle empty path
   if (path == "/" ) {
-    if (serverConfig.defaultFile != undefined) {
-      path += serverConfig.defaultFile;
+    if (ServerConfigReader.defaultFile != undefined) {
+      path += ServerConfigReader.defaultFile;
     }
     else {
       path += "index.html";
@@ -53,51 +53,45 @@ module.exports.FileSender = function (path, globalResponse) {
   }
 
   //properties
-  this.path = serverConfig.publicPath + path; //file path to requested file
+  this.path = ServerConfigReader.publicPath + path; //file path to requested file
   this.response = globalResponse; //binded response object
 
   //methods
-  this.send = send; //send response
-  this.sendFileResponse = sendFileResponse; //send file as response
-  this.sendFile = sendFile; //send file data and end response
-  this.getContentType = getContentType; //get content-type of requested file
-}
-
-//method definitions
-function getContentType() {
-  //get configured content-type by file ending
-  var ending = this.path.split('.');
-  ending = ending[ending.length-1];
-
-  if (contentTypes.types[ending] != undefined) {
-    return contentTypes.types[ending];
+  this.send = function () { //send response
+    if (fs.existsSync(this.path)) { //send file as response if file exists
+      this.sendFileResponse();
+    }
+    else { //send 404 error if file doesn't exist
+      this.response.writeHead(404, {"Content-Type":"text/html"});
+      this.response.end("<h1>404: File not found!</h1>");
+    }
   }
-  else { //use default if given ending isn't configured
-    return contentTypes.types["default"];
-  }
-}
 
-function sendFile (err, data) {
-  if (err) {
-    throw err;
+  this.sendFileResponse = function () {  //send file as response
+    this.response.writeHead(200, {"Content-Type":this.getContentType()}); //set response head
+    fs.readFile(this.path, {encoding: 'utf-8'}, this.sendFile.bind(this)) //read given file and send afterwards
   }
-  else { //send file and end request
-    this.response.write(data);
-    this.response.end();
-  }
-}
 
-function sendFileResponse () {
-  this.response.writeHead(200, {"Content-Type":this.getContentType()}); //set response head
-  fs.readFile(this.path, {encoding: 'utf-8'}, this.sendFile.bind(this)) //read given file and send afterwards
-}
-
-function send() {
-  if (fs.existsSync(this.path)) { //send file as response if file exists
-    this.sendFileResponse();
+  this.sendFile = function (err, data) { //send file data and end response
+    if (err) {
+      throw err;
+    }
+    else { //send file and end request
+      this.response.write(data);
+      this.response.end();
+    }
   }
-  else { //send 404 error if file doesn't exist
-    this.response.writeHead(404, {"Content-Type":"text/html"});
-    this.response.end("<h1>404: File not found!</h1>");
+
+  this.getContentType = function getContentType() { //get content-type of requested file
+    //get configured content-type by file ending
+    var ending = this.path.split('.');
+    ending = ending[ending.length-1];
+
+    if (ContentTypesConfigReader.types[ending] != undefined) {
+      return ContentTypesConfigReader.types[ending];
+    }
+    else { //use default if given ending isn't configured
+      return ContentTypesConfigReader.types["default"];
+    }
   }
 }
