@@ -37,19 +37,26 @@
 //module imports
 var fs = require("fs"); //file system access
 
-if (fs.existsSync(__dirname + "/config/server-config.json")) { //check if config file is existing
-  var data = fs.readFileSync(__dirname + "/config/server-config.json", {"encoding":"utf-8"}); //read config file; sync. reading is important
-                                                                                              //because data need to be exported immediately
+module.exports = function () {
+  if (fs.existsSync(__dirname + "/config/server-config.json")) { //check if config file is existing
+    var data = fs.readFileSync(__dirname + "/config/server-config.json", {"encoding":"utf-8"}); //read config file; sync. reading is important
+                                                                                                //because data need to be exported immediately
 
-  if (data != undefined) {
-    module.exports = JSON.parse(data); //export data
+    if (data != undefined) {
+      data = JSON.parse(data); //parse data
+      var keys = Object.getOwnPropertyNames(data); //get data keys
+
+      for (var i = 0; i <= keys.length-1; i++) { //move data into current object
+        this[keys[i]] = data[keys[i]];
+      }
+    }
+    else {
+      throw new Error("Error while reading config File");
+    }
   }
-  else {
-    throw "Error while reading config File!";
+  else { //set default values if config file is missing
+    this.serverPort = 80;
+    this.serverHost = "localhost";
+    this.publicPath = __dirname + "/public/";
   }
-}
-else { //set default values if config file is missing
-  module.exports.serverPort = 80;
-  module.exports.serverHost = "localhost";
-  module.exports.publicPath = __dirname + "/public/";
 }
