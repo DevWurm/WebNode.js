@@ -41,7 +41,7 @@ There is no documentation yet. (Email me if you have any questions)
 
 ##License
 Copyright 2015 DevWurm<br>
-'WebNode.js' is offered under GPL 3 License (Read ./license/gpl-3.0.txt)
+'WebNode.js' is offered under MIT License (Read LICENSE)
 
 ##Authors
 DevWurm<br>
