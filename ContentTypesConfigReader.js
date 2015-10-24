@@ -37,37 +37,37 @@
 //module imports
 var fs = require("fs"); //file system access
 
-if (fs.existsSync(__dirname + "/config/content-types.json")) { //check if content-types config file is existing
+module.exports = function () {
+  if (fs.existsSync(__dirname + "/config/content-types-config.json")) { //check if content-types config file is existing
 
-  fs.readFile(__dirname + "/config/content-types.json", //read config file
+    fs.readFile(__dirname + "/config/content-types-config.json", //read config file
 
-  //callback:
-  function (err, data) {
+    //callback:
+    function (err, data) {
+      if (err) {
+        throw err;
+      }
 
-    if (err) {
-      throw err;
-    }
+      else {
+        data = JSON.parse(data); //parse config file (JSON)
 
-    else {
-      data = JSON.parse(data); //parse config file (JSON)
+        if (data.types != undefined) { //check if types property is set
 
-      if (data.types != undefined) { //check if types property is set
+          if(data.types["default"] != undefined) { //set default value for default type
+            data.types["default"] = "text/plain";
+          }
 
-        if(data.types["default"] != undefined) { //set default value for default type
-          data.types["default"] = "text/plain";
+          this.types = data.types; //export content-types
+        }
+        else { //export default value for default type if no types are defined
+          this.types = {default: "text/plain"};
         }
 
-        module.exports.types = data.types; //export content-types
-      }
-      else { //export default value for default type if no types are defined
-        module.exports.types = {default: "text/plain"};
       }
 
-    }
-
-  });
-
-}
-else { //export default if no config file is existing
-  module.exports.types = {default: "text/plain"};
+    }.bind(this));
+  }
+  else { //export default if no config file is existing
+    this.types = {default: "text/plain"};
+  }
 }
