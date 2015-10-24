@@ -19,11 +19,11 @@ located in the subfolder 'config'. By default WebNode.js uses the two config fil
 Two example files are included in the repository.
 
 ###Starting the server
-For starting the server run the <code>Node.js</code> command on the <code>server.js</code>
+For starting the server run the <code>Node.js</code> command on the <code>Server.js</code>
 with system administrator privilege.<br>
 On Linux run:
 <pre><code>
-sudo nodejs ./server.js
+sudo node ./Server.js
 </code></pre>
 After that the server is reachable under the configured IP address and port (or localhost:80). The path behind the
 host in the request will specify the path relative to the configured publicPath (or ./public/). If no path
