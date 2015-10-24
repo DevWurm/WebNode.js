@@ -36,15 +36,9 @@
 
 //module imports
 var http = require('http'); //http socket
-var filesender = require('./filesender.js'); //filesender class
-var serverConfig = require('./server-config.js'); //configuration data
-
-//function declarations
-function deliver_file(request, response) { //reaction to request (responding requested file)
-  var sender = new filesender.FileSender(request.url, response); //creating new FileSender object
-  sender.send(); //send file
-}
+var FileDeliverer = require('./FileDeliverer.js'); //filesender class
+var ServerConfigReader = new (require('./ServerConfigReader.js'))();
 
 //creating server
-var server = http.createServer(deliver_file); //set reaction function
-server.listen(serverConfig.serverPort, serverConfig.serverHost); //bind server
+var server = http.createServer((new FileDeliverer).deliver); //set reaction function
+server.listen(ServerConfigReader.serverPort, ServerConfigReader.serverHost); //bind server
