@@ -25,10 +25,26 @@
 */
 
 //module imports
+var fs = require('fs'); //file system access
 var http = require('http'); //http socket
+var https = require('https'); //https socket
 var FileDeliverer = require('./FileDeliverer.js'); //filesender class
 var ServerConfigReader = new (require('./ServerConfigReader.js'))();
 
-//creating server
-var server = http.createServer((new FileDeliverer).deliver); //set reaction function
-server.listen(ServerConfigReader.serverPort, ServerConfigReader.serverHost); //bind server
+//creating http server
+if (ServerConfigReader.httpEnabled) {
+	var server = http.createServer((new FileDeliverer).deliver); //set reaction function
+	server.listen(ServerConfigReader.httpPort, ServerConfigReader.serverHost); //bind server
+}
+
+
+//creating https server
+if (ServerConfigReader.httpsEnabled) {
+	var certificateOptions = {
+	  key: fs.readFileSync(ServerConfigReader.httpsPrivateKeyPath),
+	  cert: fs.readFileSync(ServerConfigReader.httpsCertificatePath)
+	};
+
+	var HTTPSServer = https.createServer(certificateOptions, (new FileDeliverer).deliver); //set reaction function
+	HTTPSServer.listen(ServerConfigReader.httpsPort, ServerConfigReader.serverHost); //bind server
+}
