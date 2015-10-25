@@ -1,5 +1,5 @@
 # WebNode.js
-Basic, hackable/extendible, configurable Node.js Webserver.<br>
+Basic, hackable/extendible, configurable Node.js Webserver for HTTP and HTTPS connections.<br>
 With WebNode.js you can set up a webserver, delivering files on request, easily.<br>
 You can configure and run the server completely without programming.<br>
 Because of the configuration infrastructure its easy for developers to extend the
@@ -7,8 +7,8 @@ server with their own
 modules and additions.
 
 ##modules
-WebNode.js uses the Node.js core modules <code>fs</code> and <code>http</code>, as well
-as the local modules <code>FileSender.js</code>, <code>ServerConfigReader.js</code> and
+WebNode.js uses the Node.js core modules <code>fs</code>, <code>http</code> and <code>https</code>, as well
+as the local modules <code>FileSender.js</code>, <code>FileDeliverer.js</code>, <code>ServerConfigReader.js</code> and
 <code>ContentTypesConfigReader.js</code>.
 
 ##Running the server
