@@ -1,6 +1,11 @@
 {
-  "serverPort":80,
   "serverHost":"127.0.0.2",
+  "httpEnabled":true,
+  "httpPort":80,
+  "httpsEnabled":true,
+  "httpsPort":443,
+  "httpsPrivateKeyPath":"key/my.privkey.key",
+  "httpsCertificatePath":"key/my.cert.cert",
   "publicPath":"/home/myusr/mydir/WebNode.js/server-public/",
   "defaultFile":"index.html"
 }

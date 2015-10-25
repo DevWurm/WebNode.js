@@ -45,8 +45,10 @@ module.exports = function () {
     }
   }
   else { //set default values if config file is missing
+    this.httpEnabled = true;
     this.serverPort = 80;
     this.serverHost = "localhost";
     this.publicPath = __dirname + "/public/";
+    this.httpsEnabled = false;
   }
 }
