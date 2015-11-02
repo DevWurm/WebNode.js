@@ -23,8 +23,9 @@ For starting the server run the <code>Node.js</code> command on the <code>Server
 with system administrator privilege.<br>
 On Linux run:
 <pre><code>
-sudo node ./Server.js
+node ./Server.js
 </code></pre>
+ (with access rights to the networking stack, i.e. with root rights)
 After that the server is reachable under the configured IP address and port (or localhost:80). The path behind the
 host in the request will specify the path relative to the configured publicPath (or ./public/). If no path
 is given the configured defaultFile (or index.html) is returned.<br>
